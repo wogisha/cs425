@@ -23,6 +23,8 @@ public interface AttendanceService {
 	
 	List<StudentAttendance> createAttendanceReportForOffering(CourseOffering courseOffering);
 	
+	List<StudentAttendance> createAttendanceReportForOffering(Long courseOfferingId);
+	
 	void emailReportToStudentsForBlock(String blockStartDate);
 
 	void emailReportToStudentsForOffering(CourseOffering courseOffering);

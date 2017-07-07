@@ -28,6 +28,7 @@ import edu.mum.cs.projects.attendance.domain.entity.Student;
 import edu.mum.cs.projects.attendance.domain.entity.Timeslot;
 import edu.mum.cs.projects.attendance.ooxml.SpreadsheetWriterDAO;
 import edu.mum.cs.projects.attendance.repository.BarcodeRecordRepository;
+import edu.mum.cs.projects.attendance.repository.CourseOfferingRepository;
 import edu.mum.cs.projects.attendance.util.DateUtil;
 
 /**
@@ -58,6 +59,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 	
 	@Autowired
 	BarcodeRecordRepository barcodeRecordRepository;
+	
+	@Autowired
+	CourseOfferingRepository courseOfferingRepository;
 
 	@Override
 	public void countAttendancePerDay() {
@@ -188,7 +192,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 	@Override
 	@Transactional
 	public List<StudentAttendance> createAttendanceReportForBlock(String blockStartDate) {
+		
 		List<StudentAttendance> errorRecords = new ArrayList<>();
+		
 		for (CourseOffering offering : courseService.getCourseOfferings(blockStartDate)) {
 			errorRecords.addAll(createAttendanceReportForOffering(offering));
 		}
@@ -207,6 +213,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public void emailReportToStudentsForOffering(CourseOffering courseOffering) {
 		List<StudentAttendance> studentAttendanceList = retrieveStudentAttendanceRecords(courseOffering);
 		emailService.emailAttendanceReportToStudents(studentAttendanceList);		
+	}
+
+	@Override
+	public List<StudentAttendance> createAttendanceReportForOffering(Long courseOfferingId) {
+		
+		CourseOffering courseOfferTemp = courseOfferingRepository.findOne(courseOfferingId);
+		
+		return createAttendanceReportForOffering(courseOfferTemp);
 	}
 
 }

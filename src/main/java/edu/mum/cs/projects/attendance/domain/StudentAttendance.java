@@ -99,6 +99,7 @@ public class StudentAttendance {
 		sb.append(" -> ");
 
 		int presentCount = 0;
+		
 		for (boolean present : attendance) {
 			if (present) {
 				++presentCount;
